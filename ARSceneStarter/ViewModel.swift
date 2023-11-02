@@ -13,6 +13,11 @@ import Combine
 class ViewModel: ObservableObject {
     // App state variables.
     @Published var showDebug = false
+
+    @Published var myVariable = 0
+
+    @Published var xPosition: Float = 0
+
     
     // For handling UI signals.
     enum UISignal {

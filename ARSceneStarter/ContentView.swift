@@ -18,6 +18,26 @@ struct ContentView: View {
             ARViewContainer(viewModel: viewModel)
             
             VStack {
+
+                Text("\(viewModel.xPosition)")
+
+                HStack {
+                    Button {
+                        viewModel.myVariable += 1
+                    } label: {
+                        Text("My Button")
+                            .foregroundColor(.white)
+                    }
+
+                    Text("\(viewModel.myVariable)")
+                    
+                    
+                    Spacer()
+                }
+                .padding()
+                
+
+                
                 Spacer()
                 
                 HStack {

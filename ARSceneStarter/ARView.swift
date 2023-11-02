@@ -108,6 +108,10 @@ class CustomARView: ARView {
             
             // Get camera position.
             let povPosition = pov.position(relativeTo: originAnchor)
+            
+            print(povPosition)
+            viewModel.xPosition = povPosition.x
+
             // print(povPosition)
         }
         .store(in: &subscriptions)
@@ -137,10 +141,23 @@ class CustomARView: ARView {
             }
         }
         .store(in: &subscriptions)
+
+
+        // Process change to showDebug state variable.
+        viewModel.$myVariable.sink { [weak self] myVariable in
+            guard let self else { return }
+            
+            print("myVariable:", myVariable)
+            
+        }
+        .store(in: &subscriptions)
     }
     
     /// Reset scene.
     func resetScene() {
+        // Add test sphere to origin anchor.
+        originAnchor.addChild(testSphere)
+
         // Move test sphere and children in front of camera.
         testSphere.transform.matrix = pov.transformMatrix(relativeTo: originAnchor) * Transform(translation: [0, 0, -0.5]).matrix
     }
