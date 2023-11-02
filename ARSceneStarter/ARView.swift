@@ -37,8 +37,6 @@ class CustomARView: ARView {
     
     // Custom entities.
     var testSphere: ModelEntity!
-    var testBox: ModelEntity!
-    var toyPlane: ModelEntity!
     
     init(frame: CGRect, viewModel: ViewModel) {
         self.viewModel = viewModel
@@ -99,11 +97,6 @@ class CustomARView: ARView {
     /// Define and attach entities.
     func setupEntities() {
         testSphere = makeSphereEntity(name: "sphere", radius: 0.05, color: .orange)
-        
-        testBox = makeBoxEntity(name: "box", width: 0.1, height: 0.1, depth: 0.1, imageName: "checker.png")
-        
-        toyPlane = makeModelEntity(name: "plane", usdzModelName: "toy_biplane")
-        toyPlane.animate(true)
     }
     
     
@@ -126,12 +119,6 @@ class CustomARView: ARView {
             switch signal {
             case .reset:
                 resetScene()
-            case .drop:
-                dropSphere()
-            case .place:
-                placeOnPlane()
-            case .randomize:
-                randomize()
             }
         }
         .store(in: &subscriptions)
@@ -154,57 +141,7 @@ class CustomARView: ARView {
     
     /// Reset scene.
     func resetScene() {
-        // Remove all children.
-        testSphere.children.removeAll()
-
-        // Make test sphere static.
-        testSphere.physicsBody?.mode = .static
-
-        // Attach test sphere to origin.
-        originAnchor.addChild(testSphere)
-
-        // Attach test box to left of test sphere.
-        testBox.position.x = -0.25
-        testSphere.addChild(testBox)
-
-        // Attach toy plane to right of test sphere.
-        toyPlane.position.x = 0.25
-        testSphere.addChild(toyPlane)
-
         // Move test sphere and children in front of camera.
         testSphere.transform.matrix = pov.transformMatrix(relativeTo: originAnchor) * Transform(translation: [0, 0, -0.5]).matrix
-    }
-    
-    // Add physics to sphere and drop.
-    func dropSphere() {
-        testSphere.generateCollisionShapes(recursive: true)
-        
-        let mass = PhysicsMassProperties(mass: 0.5)
-        let physicsResource = PhysicsMaterialResource.generate(friction: 0.4, restitution: 0.95)
-        testSphere.physicsBody = PhysicsBodyComponent(massProperties: mass, material: physicsResource)
-        testSphere.physicsBody?.mode = .dynamic
-    }
-    
-    // Create plane anchor and add to scene.
-    func placeOnPlane() {
-        let anchorEntity = AnchorEntity(plane: [.horizontal, .vertical],
-                                        minimumBounds: [0.25, 0.25])
-        arView.scene.anchors.append(anchorEntity)
-        
-        // Attach test sphere to anchor.
-        anchorEntity.addChild(testSphere)
-        testSphere.position.y = 0.05
-    }
-
-    // Create boxes, attach to test sphere and randomly position.
-    func randomize() {
-        for _ in 1..<100 {
-            let boxCopy = makeBoxEntity(name: "random-box", width: 0.1, height: 0.1, depth: 0.1,
-                                        imageName: "checker.png", tintColor: .randomHue)
-            boxCopy.position.x = Float.random(in: -1...1)
-            boxCopy.position.y = Float.random(in: 0...1)
-            boxCopy.position.z = Float.random(in: -1...1)
-            testSphere.addChild(boxCopy)
-        }
     }
 }
