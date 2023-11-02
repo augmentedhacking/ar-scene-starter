@@ -109,10 +109,8 @@ class CustomARView: ARView {
             // Get camera position.
             let povPosition = pov.position(relativeTo: originAnchor)
             
-            print(povPosition)
-            viewModel.xPosition = povPosition.x
-
             // print(povPosition)
+            viewModel.xPosition = povPosition.x
         }
         .store(in: &subscriptions)
         

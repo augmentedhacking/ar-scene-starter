@@ -18,9 +18,6 @@ struct ContentView: View {
             ARViewContainer(viewModel: viewModel)
             
             VStack {
-
-                Text("\(viewModel.xPosition)")
-
                 HStack {
                     Button {
                         viewModel.myVariable += 1
@@ -35,9 +32,11 @@ struct ContentView: View {
                     Spacer()
                 }
                 .padding()
-                
+                .padding(.top, 100)
 
                 
+                Text("\(viewModel.xPosition)")
+
                 Spacer()
                 
                 HStack {
